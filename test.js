@@ -1,6 +1,6 @@
 questions = [
-    ['Who wrote the book "One man one Wife"',['Chinua Achebe','Ngugi Wa Thiongo','T.M. Aluko','Ferdinard Oyono'] ,'T.M. Aluko', 0],
-    ["Which legal document states a person's wishes regarding the disposal of their property after death?",['Will','Shall','Would','Should'] ,'Will', 100],
+    ['Who wrote the book "One man one Wife"?',['Chinua Achebe','Ngugi Wa Thiongo','T.M. Aluko','Ferdinard Oyono'] ,'T.M. Aluko', 0],
+    ["Which Football Club is also called 'The troters?",[' Arsenal F C','Wigan Athletic','Barcellona F C','Bolton Wanderer'] ,'Bolton Wanderer', 100],
     ['Complete the title of the James Bond film The Man With The Golden...',['Gun','Tooth','Delicious','Eagle'] ,'Gun', 200],
     ['Which of these fruits shares its name with something superior or desirable?',['Apricot','Mango','Grapefruit','Plum'] ,'Plum', 300],
     ['In which sport do two teams pull at the opposite ends of a rope?',['Ice hockey','Basketball','Tug of war','Polo'] ,'Tug of war', 500],
@@ -26,11 +26,11 @@ var fiftyFifty = document.querySelector('.fifty-fifty');
 var freePass = document.querySelector('.free-pass');
 var lifeLine = document.querySelector('.lifeline');
 
+fiftyFifty.style.display = 'none';
+
 Qnum = -1;
 nextQuestion();
 function nextQuestion() {
-    // alert(bank.id);
-    // alert();
     Qnum = Qnum + 1;
     console.log("qnum is " + Qnum)
     var total = questions.length;
@@ -61,74 +61,111 @@ function askQuestion(counterNum) {
     console.log(answers);
     bank.innerHTML = "Balance : £" + questions[counterNum][3];
     correctAnswer = questions[counterNum][2];
-    console.log("Answer is " + correctAnswer);
     correctAnswer = correctAnswer.replace(/ /g,'').toLowerCase();
-    document.querySelector('.answers li').addEventListener('click', function(e) {
-        alert(this.id);
-        console.log(e.target);
-        answerQuestion();
-      });
+    console.log("Answer is " + correctAnswer);
 
       document.querySelectorAll('.answers li').forEach(function(el){
         el.addEventListener('click', function() {
-          alert(this.id);
-          alert(this.getAttribute( 'data-answer' ));
-          answerQuestion();
+        //   alert(this.getAttribute( 'data-answer' ));
+        var UserAnswer = this.getAttribute( 'data-answer' ).replace(/ /g,'').toLowerCase();
+        // alert(UserAnswer);
+        if (UserAnswer == correctAnswer) {
+            nextQuestion();
+        }
+        else {
+    
+            questionBox.innerHTML= "Sorry you've lost your money";
+            bank.innerHTML = "Balance : £0";
+            answers.style.display = 'none';
+            restart.style.display = 'block';
+            questionNumber.style.display = 'none';
+            lifeLine.style.display = 'none';
+            fiftyFifty.style.display = 'none';
+            freePass.style.display = 'none';
+        }
         });
       });
 
+    //   fiftyFifty.addEventListener('click', function ( event ) {
+    //     fiftyFifty.style.display = 'none';
+    //     alert();
+    //     alert(this.getAttribute( 'data-answer' ).replace(/ /g,'').toLowerCase());
 
-    fiftyFifty.click(function(){
-        fiftyFifty.hide();
+    //     fiftyFiftycount = 0;
+    //     var elements = document.querySelectorAll('.answers li');
+    //     Array.prototype.forEach.call(elements, function(){
+    //         alert(this.getAttribute( 'data-answer' ).replace(/ /g,'').toLowerCase());
+    //         if(fiftyFiftycount < 2) {
+    //             if(this.getAttribute( 'data-answer' ).replace(/ /g,'').toLowerCase() != correctAnswer) {
+    //                 this.style.display = 'none';
+    //                 fiftyFiftycount = fiftyFiftycount + 1;
+    //             }
+    //         }
+    //     });
+    //     }, false);
+
+    // fiftyFifty.click(function(){
+    //     fiftyFifty.hide();
+    //     fiftyFiftycount = 0;
+      
+    //     $(".answers li").each(function() {
+    //         if(fiftyFiftycount < 2) {
+    //             if($(this).data('answer').replace(/ /g,'').toLowerCase() != correctAnswer) {
+    //                 $(this).hide();
+    //                 fiftyFiftycount = fiftyFiftycount + 1;
+    //             }
+    //         }
+    //     });
+    // });
+}
+
+
+fiftyFifty.addEventListener('click', function ( event ) {
+        fiftyFifty.style.display = 'none';
+        alert();
+        // alert(this.getAttribute( 'data-answer' ).replace(/ /g,'').toLowerCase());
+
         fiftyFiftycount = 0;
-        $(".answers li").each(function() {
+        var elements = document.querySelectorAll('.answers li');
+        Array.prototype.forEach.call(elements, function(){
+            // alert(this);
+            alert(elements.getAttribute( 'data-answer' ).replace(/ /g,'').toLowerCase());
             if(fiftyFiftycount < 2) {
-                if($(this).data('answer').replace(/ /g,'').toLowerCase() != correctAnswer) {
-                    $(this).hide();
+                if(elements.getAttribute( 'data-answer' ).replace(/ /g,'').toLowerCase() != correctAnswer) {
+                    alert();
+                    this.style.display = 'none';
                     fiftyFiftycount = fiftyFiftycount + 1;
                 }
             }
         });
-    });
+        }, false);
+
+function answerQuestion() {
+    $('.answers li').off();           
 }
 
-function answerQuestion1() {
-	alert(this.id);
-	console.log(this.id);
-	alert(this.innerHTML);
-    // Unbind the answer button
-    $('.answers li').off();
-    
-    // Take the data attribute form the answer the user clicked and remove spaces and change to lowercase
-    var UserAnswer = $(this).data('answer').replace(/ /g,'').toLowerCase();
-    
-    // Does the answer match the correct answer we stored in the variable?
-    if (UserAnswer == correctAnswer) {
-        nextQuestion();
-    }
+restart.addEventListener('click', function ( event ) {
+reStart();
+}, false);
 
+freePass.addEventListener('click', function ( event ) {
+		
+    freePass.style.display = 'none';
 
-    // If it doesn't then they have lost and we need to reset the game
-    else {
+    // Jump to next question
+    nextQuestion();
     
-        // Tell them they've lost
-        questionBox.html("Sorry you've lost your money");
-        // Reset the bank balance
-        bank.html("Balance : £0");
-        // We don't want to see any answers here
-        answers.hide();
-        // We do want to see a reset button here
-        restart.show();
-        // We don't want to see the question number here
-        questionNumber.hide();
-        //Show the lifeline buttons
-        lifeLine.hide();
-    }
-           
-}
+});
 
-function answerQuestion(){
-    alert();
-    console.log(this.document);
-    console.log(this.ownerDocument);
+function reStart() {
+		
+    Qnum = -1;
+    nextQuestion();
+
+    answers.style.display = 'block';
+    restart.style.display = 'none';
+    questionNumber.style.display = 'block';
+    lifeLine.style.display = 'block';
+    fiftyFifty.style.display = 'block';
+    freePass.style.display = 'block';
 }
